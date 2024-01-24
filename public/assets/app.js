@@ -17,9 +17,9 @@ function handleFileSelect(event) {
         showToast('Error: Only JSPF files are supported');
         return;
     }
-    
+
     var reader = new FileReader();
-    reader.onload = function(event) {
+    reader.onload = function (event) {
         var jspfData = JSON.parse(event.target.result);
         var outputData;
         var outputExtension;
@@ -121,7 +121,7 @@ function downloadFile(data, fileNameWithoutExtension, extension) {
 }
 
 var dropZone = document.getElementById('drop_zone');
-dropZone.addEventListener('dragover', function(event) {
+dropZone.addEventListener('dragover', function (event) {
     event.stopPropagation();
     event.preventDefault();
     event.dataTransfer.dropEffect = 'copy';
@@ -130,7 +130,7 @@ dropZone.addEventListener('dragover', function(event) {
 dropZone.addEventListener('drop', handleFileSelect);
 document.getElementById('file_input').addEventListener('change', handleFileSelect);
 
-document.getElementById('formatToggle').addEventListener('change', function() {
+document.getElementById('formatToggle').addEventListener('change', function () {
     if (this.checked) {
         document.getElementById('formatLabel').textContent = 'Convert to XSPF';
     } else {

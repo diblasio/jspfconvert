@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSPF to M3U Converter</title>
+    <link rel="stylesheet" href="./assets/style.css">
+</head>
+<body>
+    <div class="switch-container">
+        <label class="switch">
+            <input type="checkbox" id="formatToggle" checked aria-label="Format Toggle">
+            <span class="slider round"></span>
+        </label>
+        <span id="formatLabel">Convert to XSFP</span>
+    </div>    
+    <div class="container">
+        <div id="drop_zone" onclick="document.getElementById('file_input').click();">
+            Drop JSPF file here or click to upload<br>
+            <span>Convert your playlist to M3U or XSPF format</span>
+        </div>
+        <div id="toast" class="toast">This is a toast message!</div>
+        <input type="file" id="file_input" style="display:none;" />
+    </div>
+    <script src="./assets/app.js"></script>
+</body>
+</html>

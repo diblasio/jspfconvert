@@ -1,0 +1,20 @@
+# Environment configuration files
+.env
+
+# Operating system generated files
+.DS_Store
+
+# Editor/IDE specific files
+.vscode/
+.idea/
+
+# Build outputs
+dist/
+build/
+
+# Log files
+*.log
+
+# Temporary files
+*.tmp
+temp/

@@ -14,6 +14,10 @@ This is a JSPF to M3U/XSPF Playlist Converter - a simple web application that al
 
 To convert a JSPF file to M3U, simply drag and drop your JSPF file onto the designated area on the web page, choose 'M3U' as the output format, and click 'Convert'. The converted file will be automatically downloaded to your computer.
 
+## Live Application
+
+Access the application at [jspfconvert.pages.dev](https://jspfconvert.pages.dev) to convert JSPF files to M3U or XSPF.
+
 ## Authors
 
 - **David Di Blasio** - [diblasio](https://github.com/diblasio)

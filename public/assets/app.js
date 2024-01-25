@@ -112,6 +112,7 @@ function downloadFile(data, fileNameWithoutExtension, extension) {
 
     var a = document.createElement("a");
     a.href = url;
+    extension = extension || 'txt'; // Default to .txt if extension is not defined
     a.download = `${fileNameWithoutExtension}.${extension}`;
     document.body.appendChild(a);
     a.click();
@@ -137,3 +138,90 @@ document.getElementById('formatToggle').addEventListener('change', function () {
         document.getElementById('formatLabel').textContent = 'Convert to M3U';
     }
 });
+
+function fetchPlaylistsForUser() {
+    const username = document.getElementById('username_input').value.trim();
+    if (!username) {
+        showToast('Please enter a ListenBrainz username.', false);
+        return;
+    }
+
+    // ListenBrainz API endpoint to fetch user's playlists
+    const url = `https://api.listenbrainz.org/1/user/${encodeURIComponent(username)}/playlists`;
+
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Playlists returned:', data.playlists); // Log the list of playlists
+
+            const playlistsDropdown = document.getElementById('playlists_dropdown');
+            playlistsDropdown.innerHTML = ''; // Clear previous options
+
+            if (data && data.playlists && data.playlists.length > 0) {
+                data.playlists.forEach(item => {
+                    // Ensure the playlist object and title field exist
+                    if (item.playlist && item.playlist.title) {
+                        const option = document.createElement('option');
+                        option.value = item.playlist.identifier; // Use playlist identifier as the value
+                        option.textContent = item.playlist.title; // Use the playlist title for the dropdown text
+                        playlistsDropdown.appendChild(option);
+                    }
+                });
+
+                // Show the playlists dropdown container
+                document.getElementById('playlists_container').style.display = 'block';
+            } else {
+                showToast('No playlists found for this user.', false);
+            }
+        })
+        .catch(error => {
+            showToast(`Error fetching playlists: ${error.message}`, false);
+        });
+}
+
+function convertAndDownloadPlaylist() {
+    const selectedOption = document.getElementById('playlists_dropdown').selectedOptions[0];
+    const selectedPlaylistUrl = selectedOption.value;
+    const selectedPlaylistTitle = selectedOption.text; // The text of the selected option is the playlist title
+
+    if (!selectedPlaylistUrl) {
+        showToast('Please select a playlist', false);
+        return;
+    }
+
+    const playlistId = selectedPlaylistUrl.split('/').pop();
+    const url = `https://api.listenbrainz.org/1/playlist/${playlistId}`;
+
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            let fileData;
+            let fileExtension = document.getElementById('formatToggle').checked ? 'xspf' : 'm3u'; // Set file extension based on the toggle
+
+            if (document.getElementById('formatToggle').checked) {
+                fileData = convertJSPFtoXSPF(data);
+            } else {
+                fileData = convertJSPFtoM3U(data);
+            }
+
+            const safeFileName = selectedPlaylistTitle.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+            downloadFile(fileData, safeFileName, fileExtension); // Pass the correct extension
+        })
+        .catch(error => {
+            showToast(`Error fetching playlist details: ${error}`, false);
+        });
+}
+
+// Event listeners
+document.getElementById('fetch_playlists').addEventListener('click', fetchPlaylistsForUser);
+document.getElementById('convert_playlist').addEventListener('click', convertAndDownloadPlaylist);

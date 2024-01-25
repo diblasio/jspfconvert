@@ -9,6 +9,10 @@ body, html {
     background-color: #f2f2f2;
 }
 
+#listenbrainz_fetch, #playlists_container, .switch-container, .container {
+    margin-bottom: 20px; /* Adjust the value as needed */
+}
+
 .container {
     text-align: center;
 }
@@ -21,7 +25,40 @@ body, html {
     height: 200px; 
     color: #007bff;
     font-weight: bold;
+    cursor: pointer;:root {
+    --primary-color: #4CAF50;
+    --secondary-color: #f9f9f9;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    color: var(--primary-color);
+    background-color: var(--secondary-color);
+}
+
+.container {
+    margin: 0 auto;
+    max-width: 800px;
+    padding: 1em;
+}
+
+button {
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+    border: none;
+    padding: 10px 20px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: darken(var(--primary-color), 10%);
+}
+
+input[type="text"] {
+    padding: 10px;
+    border: 1px solid var(--primary-color);
+}
     transition: all 0.3s ease;
     display: flex;
     align-items: center;

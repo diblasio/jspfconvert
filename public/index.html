@@ -3,25 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JSPF to M3U Converter</title>
+    <title>JSPF to XSPF Converter</title>
     <link rel="stylesheet" href="./assets/style.css">
 </head>
 <body>
+
+    <!-- ListenBrainz Playlist Fetch Section -->
+    <div id="listenbrainz_fetch">
+        <input type="text" id="username_input" placeholder="Enter ListenBrainz Username">
+        <button id="fetch_playlists">Fetch Playlists</button>
+    </div>
+
+    <!-- Playlists Container -->
+    <div id="playlists_container" style="display:none;">
+        <select id="playlists_dropdown"></select>
+        <button id="convert_playlist">Convert and Download Playlist</button>
+    </div>
+
+    <!-- Format Toggle Switch -->
     <div class="switch-container">
         <label class="switch">
             <input type="checkbox" id="formatToggle" checked aria-label="Format Toggle">
             <span class="slider round"></span>
         </label>
         <span id="formatLabel">Convert to XSPF</span>
-    </div>    
-    <div class="container">
+    </div>
+
+    <!-- File Drop Zone -->
+    <div class="container">          
         <div id="drop_zone" onclick="document.getElementById('file_input').click();">
-            Drop JSPF file here or click to upload<br>
-            <span>Convert your playlist to M3U or XSPF format</span>
+            You can also drop JSPF file here or click to upload to<br>
+            <span>convert your playlist to M3U or XSPF format</span>
         </div>
         <div id="toast" class="toast">This is a toast message!</div>
         <input type="file" id="file_input" style="display:none;" />
     </div>
+
     <script src="./assets/app.js"></script>
 </body>
 </html>

@@ -73,15 +73,15 @@ function convertJSPFtoXSPF(jspfData) {
         xmlString += '<track>\n';
 
         if (track.title) {
-            xmlString += `<title>${escapeXML(track.title)}</title>\n`;
+            xmlString += `<title>${escapeXML(String(track.title))}</title>\n`;
         }
 
         if (track.creator) {
-            xmlString += `<creator>${escapeXML(track.creator)}</creator>\n`;
+            xmlString += `<creator>${escapeXML(String(track.creator))}</creator>\n`;
         }
 
         if (track.identifier) {
-            xmlString += `<location>${escapeXML(track.identifier)}</location>\n`;
+            xmlString += `<location>${escapeXML(String(track.identifier))}</location>\n`;
         }
 
         xmlString += '</track>\n';

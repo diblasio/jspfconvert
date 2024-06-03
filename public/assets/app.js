@@ -139,49 +139,54 @@ document.getElementById('formatToggle').addEventListener('change', function () {
     }
 });
 
-function fetchPlaylistsForUser() {
+async function fetchPlaylistsForUser() {
     const username = document.getElementById('username_input').value.trim();
     if (!username) {
         showToast('Please enter a ListenBrainz username.', false);
         return;
     }
 
-    // ListenBrainz API endpoint to fetch user's playlists
-    const url = `https://api.listenbrainz.org/1/user/${encodeURIComponent(username)}/playlists`;
+    // ListenBrainz API endpoints to fetch user's playlists
+    const urls = [
+        `https://api.listenbrainz.org/1/user/${encodeURIComponent(username)}/playlists`,
+        `https://api.listenbrainz.org/1/user/${encodeURIComponent(username)}/playlists/createdfor`
+    ];
 
-    fetch(url)
-        .then(response => {
+    try {
+        const responses = await Promise.all(urls.map(url => fetch(url)));
+        const data = await Promise.all(responses.map(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok.');
             }
             return response.json();
-        })
-        .then(data => {
-            console.log('Playlists returned:', data.playlists); // Log the list of playlists
+        }));
 
-            const playlistsDropdown = document.getElementById('playlists_dropdown');
-            playlistsDropdown.innerHTML = ''; // Clear previous options
+        const playlists = data.flatMap(d => d.playlists || []); // Merge the results
 
-            if (data && data.playlists && data.playlists.length > 0) {
-                data.playlists.forEach(item => {
-                    // Ensure the playlist object and title field exist
-                    if (item.playlist && item.playlist.title) {
-                        const option = document.createElement('option');
-                        option.value = item.playlist.identifier; // Use playlist identifier as the value
-                        option.textContent = item.playlist.title; // Use the playlist title for the dropdown text
-                        playlistsDropdown.appendChild(option);
-                    }
-                });
+        console.log('Playlists returned:', playlists); // Log the list of playlists
 
-                // Show the playlists dropdown container
-                document.getElementById('playlists_container').style.display = 'block';
-            } else {
-                showToast('No playlists found for this user.', false);
-            }
-        })
-        .catch(error => {
-            showToast(`Error fetching playlists: ${error.message}`, false);
-        });
+        const playlistsDropdown = document.getElementById('playlists_dropdown');
+        playlistsDropdown.innerHTML = ''; // Clear previous options
+
+        if (playlists.length > 0) {
+            playlists.forEach(item => {
+                // Ensure the playlist object and title field exist
+                if (item.playlist && item.playlist.title) {
+                    const option = document.createElement('option');
+                    option.value = item.playlist.identifier; // Use playlist identifier as the value
+                    option.textContent = item.playlist.title; // Use the playlist title for the dropdown text
+                    playlistsDropdown.appendChild(option);
+                }
+            });
+
+            // Show the playlists dropdown container
+            document.getElementById('playlists_container').style.display = 'block';
+        } else {
+            showToast('No playlists found for this user.', false);
+        }
+    } catch (error) {
+        showToast(`Error fetching playlists: ${error.message}`, false);
+    }
 }
 
 function convertAndDownloadPlaylist() {
@@ -225,3 +230,4 @@ function convertAndDownloadPlaylist() {
 // Event listeners
 document.getElementById('fetch_playlists').addEventListener('click', fetchPlaylistsForUser);
 document.getElementById('convert_playlist').addEventListener('click', convertAndDownloadPlaylist);
+
